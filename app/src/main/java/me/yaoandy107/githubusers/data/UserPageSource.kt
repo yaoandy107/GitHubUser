@@ -15,9 +15,9 @@ class UserPageSource(
         val position = params.key ?: GITHUB_STARTING_PAGE_INDEX
         return try {
             val response = api.getQueryUsers(query, position, params.loadSize)
-            val users = UserDto.fromResponse(response.body()!!)
+            val users = UserDto.fromResponse(response)
             LoadResult.Page(
-                data = (users),
+                data = users,
                 prevKey = if (position == GITHUB_STARTING_PAGE_INDEX) null else position - 1,
                 nextKey = if (users.isEmpty()) null else position + 1
             )

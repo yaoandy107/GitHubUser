@@ -1,7 +1,6 @@
 package me.yaoandy107.githubusers.data
 
 import me.yaoandy107.githubusers.model.UserResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
@@ -14,5 +13,5 @@ interface UserApi {
         @Query("q") queryString: String,
         @Query("page") page: Int,
         @Query("per_page") itemsPerPage: Int
-    ): Response<UserResponse>
+    ): UserResponse
 }
