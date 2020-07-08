@@ -4,11 +4,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import me.yaoandy107.githubusers.data.UserApi
 import me.yaoandy107.githubusers.data.UserPageSource
 import me.yaoandy107.githubusers.model.User
 
-class UserRepository(private val api: UserApi) {
+class UserRepository(private val pageSource: UserPageSource) {
 
     fun getQueryUsers(
         query: String
@@ -16,12 +15,12 @@ class UserRepository(private val api: UserApi) {
         Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
-                enablePlaceholders = true
+                enablePlaceholders = false
             ),
-            pagingSourceFactory = { UserPageSource(api, query) }
+            pagingSourceFactory = { pageSource.apply { this.query = query } }
         ).flow
 
     companion object {
-        private const val NETWORK_PAGE_SIZE = 10
+        private const val NETWORK_PAGE_SIZE = 20
     }
 }

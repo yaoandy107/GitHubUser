@@ -8,9 +8,11 @@ import java.io.IOException
 
 
 class UserPageSource(
-    private val api: UserApi,
-    private val query: String
+    private val api: UserApi
 ) : PagingSource<Int, User>() {
+
+    var query: String = ""
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         val position = params.key ?: GITHUB_STARTING_PAGE_INDEX
         return try {
