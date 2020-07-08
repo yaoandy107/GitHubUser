@@ -12,7 +12,7 @@ interface UserApi {
     @GET("search/users")
     suspend fun getQueryUsers(
         @Query("q") queryString: String,
-        @Query("sort") sort: String?,
-        @Query("order") order: String
+        @Query("page") page: Int,
+        @Query("per_page") itemsPerPage: Int
     ): Response<UserResponse>
 }
