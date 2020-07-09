@@ -1,32 +1,29 @@
 package me.yaoandy107.githubusers.ui.user
 
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.yaoandy107.githubusers.R
+import me.yaoandy107.githubusers.base.BaseFragment
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import retrofit2.HttpException
 
 
-class UserFragment : Fragment() {
+class UserFragment : BaseFragment() {
 
     private var searchJob: Job? = null
     private var query: String? = null
@@ -54,6 +51,7 @@ class UserFragment : Fragment() {
         adapter.addLoadStateListener { loadState ->
             rv_user.isVisible = loadState.refresh is LoadState.NotLoading
             progress_bar.isVisible = loadState.refresh is LoadState.Loading
+            empty_view.visibility = View.GONE
 
             val errorState = loadState.source.append as? LoadState.Error
                 ?: loadState.source.prepend as? LoadState.Error
@@ -68,9 +66,7 @@ class UserFragment : Fragment() {
     private fun initSearch() {
         search_user.setOnEditorActionListener { v, actionId, event ->
             search(v.text.trim().toString())
-            val imm =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+            hideSoftKeyboard()
             true
         }
 
@@ -91,7 +87,7 @@ class UserFragment : Fragment() {
                 }
             }
         } else {
-            Snackbar.make(requireView(), "使用者名稱請勿留空", Snackbar.LENGTH_LONG)
+            showSnackBar("使用者名稱請勿留空")
         }
     }
 
@@ -100,7 +96,7 @@ class UserFragment : Fragment() {
             val httpException: HttpException = error
             when (httpException.code()) {
                 403 -> {
-                    showPagingAlertDialog("超過 API 呼叫次數，請重新嘗試")
+                    showPagingAlertDialog("API 請求過於頻繁，請稍後重新嘗試")
                 }
             }
         }
