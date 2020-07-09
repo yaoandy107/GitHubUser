@@ -61,6 +61,10 @@ class UserFragment : BaseFragment() {
                 handlePagingError(it.error as Exception)
             }
         }
+        @OptIn(ExperimentalPagingApi::class)
+        adapter.addDataRefreshListener {
+            empty_view.visibility = (if (adapter.itemCount == 0) View.VISIBLE else View.GONE)
+        }
     }
 
     private fun initSearch() {
