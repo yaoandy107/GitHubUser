@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_user.view.*
 import me.yaoandy107.githubusers.R
 import me.yaoandy107.githubusers.model.User
@@ -16,9 +17,15 @@ class UserAdapter : PagingDataAdapter<User, UserAdapter.ViewHolder>(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val username = view.tv_username
+        private val avatar = view.iv_avatar
 
         fun bind(user: User) {
             username.text = user.name
+            Glide.with(itemView.context)
+                .load(user.avatarUrl)
+                .centerCrop()
+                .thumbnail()
+                .into(avatar)
         }
     }
 
